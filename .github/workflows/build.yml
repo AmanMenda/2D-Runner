@@ -1,0 +1,17 @@
+name: Compilations tests
+
+on: [push, pull_request]
+
+jobs:
+  build:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v3
+      - name: perform make at the root of the repository
+        run: make
+        timeout-minutes: 2
+
+      - uses: actions/checkout@v3
+      - name: perform make fclean at the root of the repository
+        run: make fclean
+        timeout-minutes: 2

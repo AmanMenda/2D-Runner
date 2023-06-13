@@ -7,9 +7,9 @@ jobs:
     runs-on: ubuntu-latest
     steps:
       - name: Get latest CMake
-            uses: lukka/get-cmake@latest
-            with:
-              cmakeVersion: latestrc
+        uses: lukka/get-cmake@latest
+        with:
+          cmakeVersion: latestrc
 
       - uses: actions/checkout@v3
       - name: Install raylib dependencies and perform make at the root of the repository

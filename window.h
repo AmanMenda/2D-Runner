@@ -10,6 +10,6 @@
 typedef struct window
 {
     int width;
-    int heigth;
+    int height;
     int framerate;
 } Window_t;

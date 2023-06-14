@@ -1,6 +1,8 @@
 BIN	:=	2D_Runner
 
-SRC :=	main.c
+SRC :=	main.c		\
+		window.c	\
+		main_menu.c
 
 OBJ :=	$(SRC:.c=.o)
 

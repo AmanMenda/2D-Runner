@@ -7,6 +7,7 @@
 
 #pragma once
     #include "raylib.h"
+    #include "window.h"
     #include <stdio.h>
 
     #define NUM_FRAMES  3 // Number of frames (rectangles) for the button sprite texture
@@ -54,3 +55,9 @@ typedef struct game
 {
     Menu_t mainMenu;
 } Game_t;
+
+void menu_dtor(Menu_t *menu);
+
+void setup_main_menu(Window_t *window, Menu_t *menu);
+
+void main_menu_handler(Menu_t *menu);

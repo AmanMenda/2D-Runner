@@ -6,7 +6,19 @@
 */
 
 #pragma once
-#include "raylib.h"
+    #include "raylib.h"
+
+    #define NUM_FRAMES  3 // Number of frames (rectangles) for the button sprite texture
+
+    extern int current_screen;
+
+enum screen
+{
+    MENU_SCREEN,
+    GAME_SCREEN,
+    SETTINGS_SCREEN,
+    HTP_SCREEN // How-to-play
+};
 
 typedef enum buttonState
 {

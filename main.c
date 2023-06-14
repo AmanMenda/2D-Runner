@@ -3,6 +3,7 @@
 #include "window.h"
 
 int current_screen = MENU_SCREEN;
+float seconds = .0f;
 
 void createWindow(const int screenWidth, const int screenheight, const int framerate)
 {
@@ -26,59 +27,81 @@ Texture2D extractTextureFromImage(char const *imagePath)
     return texture;
 }
 
+void menu_dtor(Menu_t *menu)
+{
+    UnloadMusicStream(menu->musicStream);
+    UnloadTexture(menu->background);
+    UnloadFont(menu->font);
+    UnloadSound(menu->clickSound);
+}
+
+void setup_main_menu(Window_t *window, Menu_t *menu)
+{
+    menu->background        = LoadTexture("assets/png/menu.png");
+
+    // Text on menu
+    menu->font              = LoadFont("assets/fonts/Julee-Regular.ttf");
+    menu->gameNamePos       = (Vector2){(float)window->width/2 - 115, (float)100};
+    menu->menuMessagePos    = (Vector2){(float)window->width/2 - 140, (float)500};
+
+    // Menu sound
+    menu->musicStream       = LoadMusicStream("assets/evil-storm.wav");
+    menu->clickSound        = LoadSound("assets/ball-tap.wav");
+    PlayMusicStream(menu->musicStream);
+}
+
+void main_menu_handler(Menu_t *menu)
+{
+    if (IsKeyPressed(KEY_SPACE))
+    {
+        PlaySound(menu->clickSound);
+        current_screen = GAME_SCREEN;
+    }
+    UpdateMusicStream(menu->musicStream);
+    DrawTexture(menu->background, 0, 0, WHITE);
+    DrawTexture(menu->background, menu->background.width, 0, WHITE);
+    DrawTextEx(menu->font, "2D RUNNER", menu->gameNamePos, 60, .0f, WHITE);
+    if (((int)seconds % 2) == 0)
+        DrawTextEx(menu->font, "Press 'SPACE' to start", menu->menuMessagePos, 30, 5.0f, WHITE);
+    else
+        DrawTextEx(menu->font, "Press 'SPACE' to start", menu->menuMessagePos, 30, 5.0f, BLANK);
+}
+
+void setup_window(Window_t *window)
+{
+    initWindowInfos(window);
+    InitAudioDevice();
+    createWindow(window->width, window->height, window->framerate);
+}
+
 int main(int argc, char *argv[])
 {
     // Not using argc nor argv yet
     (void)argc; (void)argv;
-
+    Game_t      game;
     Window_t    window;
 
-    initWindowInfos(&window);
-    InitAudioDevice();
-    createWindow(window.width, window.height, window.framerate);
-    Texture2D menuBackground = LoadTexture("assets/png/menu.png");
-    Shader backgroundShader = LoadShader(0, TextFormat("shaders/wave.fs", 330));
-
-    // Menu Text
-    Font gameMenuFont = LoadFont("assets/fonts/Julee-Regular.ttf");
-    Vector2 gameNamePosition = {(float)window.width/2 - 115, (float)100};
-    Vector2 menuMessage = {(float)window.width/2 - 140, (float)500};
-    float seconds = 0;
-
-    // Menu sound
-    Music menuSound = LoadMusicStream("assets/evil-storm.wav");
-    Sound clickSound = LoadSound("assets/ball-tap.wav");
-    PlayMusicStream(menuSound);
-
+    setup_window(&window);
+    setup_main_menu(&window, &game.mainMenu);
     while (!WindowShouldClose())
     {
         seconds += GetFrameTime();
         BeginDrawing();
-            if (current_screen == MENU_SCREEN)
+            switch(current_screen)
             {
-                if (IsKeyPressed(KEY_SPACE))
-                {
-                    PlaySound(clickSound);
-                    current_screen = GAME_SCREEN;
-                }
-                UpdateMusicStream(menuSound);
-                DrawTexture(menuBackground, 0, 0, WHITE);
-                DrawTexture(menuBackground, menuBackground.width, 0, WHITE);
-                DrawTextEx(gameMenuFont, "2D RUNNER", gameNamePosition, 60, .0f, WHITE);
-                if (((int)seconds % 2) == 0)
-                    DrawTextEx(gameMenuFont, "Press any key to start", menuMessage, 30, 5.0f, WHITE);
-                else
-                    DrawTextEx(gameMenuFont, "Press any key to start", menuMessage, 30, 5.0f, BLANK);
+                case MENU_SCREEN:
+                    main_menu_handler(&game.mainMenu);
+                    break;
+                case GAME_SCREEN:
+                    ClearBackground(RAYWHITE);
+                    break;
+                default:
+                    dprintf(2, "Invalid integer value.\n");
+                    break;
             }
-            if (current_screen == GAME_SCREEN)
-                ClearBackground(RAYWHITE);
         EndDrawing();
     }
-    UnloadShader(backgroundShader);
-    UnloadMusicStream(menuSound);
-    UnloadTexture(menuBackground);
-    UnloadFont(gameMenuFont);
-
+    menu_dtor(&game.mainMenu);
     CloseAudioDevice();
     CloseWindow();
     return EXIT_SUCCESS;

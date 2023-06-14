@@ -31,7 +31,6 @@ int main(int argc, char *argv[])
     // Not using argc nor argv yet
     (void)argc; (void)argv;
 
-    // Game_t      game;
     Window_t    window;
 
     initWindowInfos(&window);
@@ -46,24 +45,37 @@ int main(int argc, char *argv[])
     Vector2 menuMessage = {(float)window.width/2 - 140, (float)500};
     float seconds = 0;
 
+    // Menu sound
+    Music menuSound = LoadMusicStream("assets/evil-storm.wav");
+    Sound clickSound = LoadSound("assets/ball-tap.wav");
+    PlayMusicStream(menuSound);
+
     while (!WindowShouldClose())
     {
         seconds += GetFrameTime();
         BeginDrawing();
-            ClearBackground(RAYWHITE);
-
-            //Apply shader to everything between Begin and End
-            DrawTexture(menuBackground, 0, 0, WHITE);
-            DrawTexture(menuBackground, menuBackground.width, 0, WHITE);
-            DrawTextEx(gameMenuFont, "2D RUNNER", gameNamePosition, 60, .0f, WHITE);
-            if (((int)seconds % 2) == 0)
-                DrawTextEx(gameMenuFont, "Press any key to start", menuMessage, 30, 5.0f, WHITE);
-            else
-                DrawTextEx(gameMenuFont, "Press any key to start", menuMessage, 30, 5.0f, BLANK);
-
+            if (current_screen == MENU_SCREEN)
+            {
+                if (IsKeyPressed(KEY_SPACE))
+                {
+                    PlaySound(clickSound);
+                    current_screen = GAME_SCREEN;
+                }
+                UpdateMusicStream(menuSound);
+                DrawTexture(menuBackground, 0, 0, WHITE);
+                DrawTexture(menuBackground, menuBackground.width, 0, WHITE);
+                DrawTextEx(gameMenuFont, "2D RUNNER", gameNamePosition, 60, .0f, WHITE);
+                if (((int)seconds % 2) == 0)
+                    DrawTextEx(gameMenuFont, "Press any key to start", menuMessage, 30, 5.0f, WHITE);
+                else
+                    DrawTextEx(gameMenuFont, "Press any key to start", menuMessage, 30, 5.0f, BLANK);
+            }
+            if (current_screen == GAME_SCREEN)
+                ClearBackground(RAYWHITE);
         EndDrawing();
     }
     UnloadShader(backgroundShader);
+    UnloadMusicStream(menuSound);
     UnloadTexture(menuBackground);
     UnloadFont(gameMenuFont);
 

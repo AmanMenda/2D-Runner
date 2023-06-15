@@ -5,10 +5,10 @@
 </p>
 
 ## Installation
-A python script will be available soon. For now, just look at the build.yml file to install the dependencies (on Ubuntu).
+A python script will be available soon. For now, please look at the build.yml file to install the dependencies (on Ubuntu).
 
 ## Features
-  - [ ] Basic game physic (run, jump, and maybe attack)
+  - [ ] Basic game physic (run, clean jump, and maybe attack)
   - [ ] Procedural generation of obstacles/Ennemis
   - [x] Cozy background sound
 

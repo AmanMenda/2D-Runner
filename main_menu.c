@@ -32,7 +32,6 @@ void main_menu_handler(Menu_t *menu)
     }
     UpdateMusicStream(menu->musicStream);
     DrawTexture(menu->background, 0, 0, WHITE);
-    DrawTexture(menu->background, menu->background.width, 0, WHITE);
     DrawTextEx(menu->font, "2D RUNNER", menu->gameNamePos, 60, .0f, WHITE);
     if (((int)seconds % 2) == 0)
         DrawTextEx(menu->font, "Press 'SPACE' to start", menu->menuMessagePos, 30, 5.0f, WHITE);

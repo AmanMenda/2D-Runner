@@ -53,9 +53,21 @@ typedef struct menu
     Texture2D   background;
 } Menu_t;
 
+typedef struct player
+{
+    Texture2D sprite;
+    Rectangle state;
+    int framesCounter;
+    int framesSpeed;
+    int currentFrame;
+    float singleFrameWidth;
+    #define SCAFY_NB_FRAMES 5
+} Player_t;
+
 typedef struct game
 {
     Menu_t mainMenu;
+    Player_t main_character;
     Texture2D background;
     Rectangle backgroundRect;
     Rectangle backgroundRectOffset;

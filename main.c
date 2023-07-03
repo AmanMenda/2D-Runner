@@ -48,14 +48,36 @@ void init_game_background(Window_t *window, Game_t *game)
 
 void parallax_effect(Game_t *game)
 {
-    game->backgroundRect.x -= 2;
-    game->backgroundRectOffset.x -= 2;
+    game->backgroundRect.x += 2;
+    game->backgroundRectOffset.x += 2;
     if (game->backgroundRect.x <= -game->background.width)
         game->backgroundRect.x = game->background.width;
     if (game->backgroundRectOffset.x <= -game->background.width)
         game->backgroundRectOffset.x = game->background.width;
     DrawTextureRec(game->background, game->backgroundRect, (Vector2){ 0, 0 }, WHITE);
     DrawTextureRec(game->background, game->backgroundRectOffset, (Vector2){ 0, 0 }, WHITE);
+}
+
+void init_character_attributes(Player_t *player)
+{
+    player->framesCounter = 0;
+    player->framesSpeed = 4;
+    player->currentFrame = 0;
+    player->sprite = LoadTexture("assets/png/scarfy.png");
+    player->state = (Rectangle){ 0, 0, player->sprite.width/6, player->sprite.height };
+    player->singleFrameWidth = player->sprite.width/6;
+}
+
+void update_character_attributes(Player_t *player)
+{
+    player->framesCounter++;
+    if (player->framesCounter >= (60/player->framesSpeed))
+    {
+        player->framesCounter = 0;
+        player->currentFrame++;
+        if (player->currentFrame > SCAFY_NB_FRAMES) player->currentFrame = 0;
+        player->state.x = (float)player->currentFrame * (float)player->singleFrameWidth;
+    }
 }
 
 int main(int argc, char *argv[])
@@ -68,9 +90,11 @@ int main(int argc, char *argv[])
     setup_window(&window);
     setup_main_menu(&window, &game.mainMenu);
     init_game_background(&window, &game);
+    init_character_attributes(&game.main_character);
 
     while (!WindowShouldClose())
     {
+        update_character_attributes(&game.main_character);
         seconds += GetFrameTime();
         BeginDrawing();
             ClearBackground(RAYWHITE);
@@ -81,6 +105,7 @@ int main(int argc, char *argv[])
                     break;
                 case GAME_SCREEN:
                     parallax_effect(&game);
+                    DrawTextureRec(game.main_character.sprite, game.main_character.state, (Vector2){ 0, 405 }, WHITE);
                     break;
                 default:
                     dprintf(2, "Invalid integer value.\n");

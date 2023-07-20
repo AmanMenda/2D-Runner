@@ -1,4 +1,4 @@
-#include "window.h"
+#include "../Headers/window.h"
 
 void createWindow(const int screenWidth, const int screenheight, const int framerate)
 {

@@ -1,8 +1,10 @@
 BIN	:=	2D_Runner
 
-SRC :=	main.c		\
-		window.c	\
-		main_menu.c
+SOURCES  :=	Sources
+
+SRC :=	$(SOURCES)/main.c		\
+		$(SOURCES)/window.c		\
+		$(SOURCES)/main_menu.c
 
 OBJ :=	$(SRC:.c=.o)
 
@@ -18,7 +20,7 @@ ${BIN}:	${OBJ}
 	$(CC) -o $@ $^ $(CFLAGS) $(RAYFLAGS)
 
 clean:
-	rm -f *.o
+	rm -f $(SOURCES)/*.o
 
 fclean:	clean
 	rm -f ${BIN}

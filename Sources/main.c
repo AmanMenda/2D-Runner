@@ -1,5 +1,5 @@
 #include <stdlib.h>
-#include "runner.h"
+#include "../Headers/runner.h"
 
 int current_screen = MENU_SCREEN;
 float seconds = .0f;
